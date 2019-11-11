@@ -8,6 +8,7 @@ export const ACTION_TYPES = {
   STOP_LOADING: 'STOP_LOADING',
   SET_ORDER: 'SET_ORDER',
   SET_MODAL_WINDOW: 'SET_MODAL_WINDOW',
+  SET_ALT_DATA_MODAL_WINDOW: 'SET_ALT_DATA_MODAL_WINDOW',
 };
 
 const saveRestaurants = data => ({
@@ -33,15 +34,26 @@ const stopLoading = () => ({
   type: ACTION_TYPES.STOP_LOADING,
 });
 
-export const setOrder = uuid => ({
+const setOrder = uuid => ({
   type: ACTION_TYPES.SET_ORDER,
   payload: uuid,
 });
 
-export const setModalWindow = bool => ({
+const setModalWindow = bool => ({
   type: ACTION_TYPES.SET_MODAL_WINDOW,
   payload: bool,
 });
+
+export const setAltDataModalWindow = data => ({
+  type: ACTION_TYPES.SET_ALT_DATA_MODAL_WINDOW,
+  payload: data,
+});
+
+export const hideModalWindow = () => (dispatch) => {
+  dispatch(setModalWindow(false));
+  dispatch(setOrder(null));
+  dispatch(setRestaurantsError(null));
+};
 
 export const loadRestaurants = () => (dispatch) => {
   dispatch(startLoading());

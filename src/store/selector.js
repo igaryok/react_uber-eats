@@ -92,3 +92,24 @@ export const selectStateModalWindow = createSelector(
   rootSelector,
   ({ showModalWindow }) => showModalWindow
 );
+
+export const selectOrderAmount = createSelector(
+  rootSelector,
+  ({ orderAmount }) => orderAmount
+);
+
+export const selectCurencyCode = createSelector(
+  rootSelector,
+  ({ restaurantPageData }) => {
+    if (!restaurantPageData) {
+      return [];
+    }
+
+    return restaurantPageData.currencyCode;
+  }
+);
+
+export const selectAltDataModal = createSelector(
+  rootSelector,
+  ({ altDataModalWindow }) => altDataModalWindow
+);

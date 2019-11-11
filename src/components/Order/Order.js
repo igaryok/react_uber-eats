@@ -2,60 +2,59 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import Loader from '../Loader';
-import Error from '../Error';
+import { OrderFooter } from '../OrderFooter';
+import { OrderCustomizationsSection } from '../OrderCustomizationsSection';
 
 import './Order.scss';
 
 export const Order = ({
-  deleteOrder,
+  hideModalWindow,
   order,
   isLoading,
   error,
+  altData,
 }) => {
   if (isLoading) {
     return <Loader />;
   }
 
-  const { imageUrl, title, itemDescription } = order;
-  const countItem = 1;
+  const {
+    imageUrl,
+    title,
+    itemDescription,
+    customizationsList = [],
+  } = !error ? order : altData;
+
   const srcImage = imageUrl || './images/no_image.png';
   const srcTitle = title || 'no-image icon';
 
   return (
     <aside className="modal">
       <div className="modal-window">
-        {error && <Error message={error} />}
-        {!error && (
-          <>
-            <img className="modal-window__img" src={srcImage} alt={srcTitle} />
-            <div className="modal-window__wrapper-content">
-              <p className="modal-window__title">{title}</p>
-              <p className="modal-window__description">{itemDescription}</p>
-              <div className="modal-window__footer">
-                <div className="counter">
-                  <img
-                    className="counter__button"
-                    src="./images/button-minus.svg"
-                    alt="icon minus"
-                  />
-                  <div className="counter__item">{countItem}</div>
-                  <img
-                    className="counter__button"
-                    src="./images/button-plus.svg"
-                    alt="icon plus"
-                  />
-                </div>
-                <button type="button" className="modal-window__button-order">
-                  {`Add ${countItem}`}
-                </button>
-              </div>
-            </div>
-          </>
-        )
+        <div className="modal-window__wrapper-img">
+          <img
+            className="modal-window__img"
+            src={srcImage}
+            alt={srcTitle}
+          />
+        </div>
+        <div className="modal__wrapper-content">
+          <p className="modal-window__title">{title}</p>
+          <p className="modal-window__description">{itemDescription}</p>
+        </div>
+        {customizationsList
+          .map(item => (
+            <OrderCustomizationsSection customizations={item} key={item.uuid} />
+          ))
         }
+        <div className="modal__wrapper-content">
+          <div className="modal-window__footer">
+            <OrderFooter altPrice={altData.price} />
+          </div>
+        </div>
         <div
-          onClick={deleteOrder}
-          onKeyPress={deleteOrder}
+          onClick={hideModalWindow}
+          onKeyPress={hideModalWindow}
           role="presentation"
         >
           <img
@@ -73,7 +72,8 @@ export const Order = ({
 Order.propTypes = {
   isLoading: PropTypes.bool,
   error: PropTypes.string,
-  deleteOrder: PropTypes.func.isRequired,
+  hideModalWindow: PropTypes.func.isRequired,
+  altData: PropTypes.shape().isRequired,
   order: PropTypes.shape(),
 };
 
